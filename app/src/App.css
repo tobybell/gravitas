@@ -1,0 +1,35 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+}
+
+.App-tl,
+.App-tr,
+.App-bl,
+.App-br {
+  width: 100px;
+  height: 100px;
+  background: red;
+  position: absolute;
+}
+
+.App-tl {
+  top: 0;
+  left: 0;
+}
+
+.App-tr {
+  top: 0;
+  right: 0;
+}
+
+.App-bl {
+  bottom: 0;
+  left: 0;
+}
+
+.App-br {
+  bottom: 0;
+  right: 0;
+}
