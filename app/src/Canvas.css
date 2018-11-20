@@ -1,0 +1,11 @@
+.Canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.Canvas-canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
