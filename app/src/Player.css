@@ -1,0 +1,63 @@
+.Player {
+  position: absolute;
+  box-sizing: border-box;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.Player-PlayButton,
+.Player-PauseButton {
+  fill: #ffffff;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.Player-Scrubber {
+  position: relative;
+  padding: 6px 0;
+  flex-basis: 0;
+  flex-grow: 1;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.Player-ScrubberBackground {
+  background-color: #ffffff;
+  height: 3px;
+  width: 100%;
+}
+
+.Player-ScrubberBar {
+  height: 100%;
+  background-color: #ff0000;
+}
+
+.Player-ScrubberTime {
+  position: absolute;
+  bottom: 100%;
+  transform: translateX(-50%);
+  cursor: text;
+}
+
+.Player-CurrTime,
+.Player-EndTime,
+.Player-Separator,
+.Player-ScrubberTime {
+  font-size: .8rem;
+  line-height: 1;
+}
+
+.Player-CurrTime,
+.Player-EndTime,
+.Player-ScrubberTime {
+  color: #fff;
+}
+
+.Player-Separator {
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 .5ch;
+}

@@ -12,6 +12,8 @@ interface ICanvasState {
 const CameraContext = React.createContext<THREE.Camera>(null as any);
 const FrameContext = React.createContext<THREE.Object3D>(null as any);
 
+export let instance: Canvas = null as any;
+
 export default class Canvas extends React.Component<{}, ICanvasState> {
   public static CameraContext = CameraContext.Consumer;
   public static FrameContext = FrameContext.Consumer;
@@ -19,23 +21,25 @@ export default class Canvas extends React.Component<{}, ICanvasState> {
     height: 0,
     width: 0,
   };
-  // Used for zooming on mac.
+  public cameraFrame = new THREE.Group();
+
+  // Used for zooming in Safari.
   private ogScale: number = 0;
+
   private scene = new THREE.Scene();
   private renderer: THREE.WebGLRenderer | null;
-  private camera = new THREE.PerspectiveCamera(90, 1);
-  private cameraFrame = new THREE.Group();
+  private camera = new THREE.PerspectiveCamera(60, 1, 1e-1, 1e16);
+  private rendered: boolean;
   public constructor(props: {}) {
     super(props);
-    this.scene.add(new THREE.AxesHelper(2000));
+    this.scene.add(new THREE.AxesHelper(1e16));
     this.cameraFrame.add(this.camera);
-    this.camera.position.set(0, 0, 5);
-    this.cameraFrame.scale.setScalar(2);
+    this.camera.position.set(0, 0, 149938519251.346924);
     this.scene.add(this.cameraFrame);
-    this.scene.background = new THREE.Color('white');
+    instance = this;
   }
   public render() {
-    this.requestWebGLRender();
+    this.webGLRender();
     return (
       <CameraContext.Provider value={this.camera}>
         <FrameContext.Provider value={this.scene}>
@@ -60,8 +64,10 @@ export default class Canvas extends React.Component<{}, ICanvasState> {
   private handleCanvas = (canvas: HTMLCanvasElement) => {
     if (canvas) {
       this.renderer = new THREE.WebGLRenderer({
+        alpha: true,
         antialias: true,
         canvas,
+        clearAlpha: 0,
         devicePixelRatio: window.devicePixelRatio,
       });
       canvas.addEventListener('gesturestart', this.handleGestureStart);
@@ -95,17 +101,21 @@ export default class Canvas extends React.Component<{}, ICanvasState> {
   }
   private gestureZoom(s: number) {
     this.camera.position.multiplyScalar(s);
+    this.webGLRender();
   }
   private gesturePan(x: number, y: number) {
     const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(y / 100, x / 100))
     this.cameraFrame.quaternion.multiply(q);
+    this.webGLRender();
   }
-  private requestWebGLRender() {
-    if (this.renderer) {
-      this.webGLRender();
-    }
+  private clearRendered = () => {
+    this.rendered = false;
   }
   private webGLRender = () => {
-    this.renderer!.render(this.scene, this.camera);
+    if (this.renderer && !this.rendered) {
+      this.renderer!.render(this.scene, this.camera);
+      this.rendered = true;
+      requestAnimationFrame(this.clearRendered);
+    }
   }
 }
