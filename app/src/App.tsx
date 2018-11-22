@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import Body from './Body';
 import Canvas from './Canvas';
-import Orbit from './Orbit';
 import Player from './Player';
 import { makeTimeSeries } from './timeSeries';
+import Trajectory from './Trajectory';
 
 import * as simData from './3b.json';
 
@@ -31,10 +31,11 @@ export default class App extends React.Component {
   private y: number[];
   private mx: number[];
   private my: number[];
+  private data: number[][];
   private interval?: NodeJS.Timeout;
   public constructor(props: {}) {
     super(props);
-    const data = transpose(simData);
+    const data = this.data = transpose(simData);
     const times = [];
     for (let i = 0; i < simData.length; i += 1) {
       times.push(i * 1000);
@@ -57,9 +58,10 @@ export default class App extends React.Component {
       <div className="App">
         <Canvas>
           <Body x={this.sx[t]} y={this.sy[t]} z={0} r={6.955e8} color={'yellow'} />
-          <Body x={this.x[t]} y={this.y[t]} z={0} r={6.955e6} color={'blue'} />
+          <Body x={this.x[t]} y={this.y[t]} z={0} r={6.955e6} color={'blue'} focused={true} />
           <Body x={this.mx[t]} y={this.my[t]} z={0} r={1.7371e6} color={'orange'} />
-          <Orbit r={149527418018.170166} color={'white'} />
+          <Trajectory x={this.data[15]} y={this.data[16]} z={this.data[17]} color={'orange'} />
+          <Trajectory x={this.data[8]} y={this.data[9]} z={this.data[10]} color={'blue'} />
         </Canvas>
         <Player
           min={0}
