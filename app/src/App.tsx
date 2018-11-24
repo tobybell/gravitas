@@ -2,11 +2,12 @@ import * as React from 'react';
 
 import Body from './Body';
 import Canvas from './Canvas';
+import Orbit from './Orbit';
 import Player from './Player';
 import { makeTimeSeries } from './timeSeries';
 import Trajectory from './Trajectory';
 
-import * as simData from './3b.json';
+import * as simData from './trajectory.json';
 
 import './App.css';
 
@@ -25,27 +26,25 @@ export default class App extends React.Component {
     playing: false,
     t: 0,
   };
+  private a: number[];
   private sx: number[];
   private sy: number[];
-  private x: number[];
-  private y: number[];
-  private mx: number[];
-  private my: number[];
+  // private sz: number[];
+  // private x: number[];
+  // private y: number[];
+  // private mx: number[];
+  // private my: number[];
   private data: number[][];
   private interval?: NodeJS.Timeout;
   public constructor(props: {}) {
     super(props);
     const data = this.data = transpose(simData);
-    const times = [];
-    for (let i = 0; i < simData.length; i += 1) {
-      times.push(i * 1000);
-    }
-    this.sx = makeTimeSeries(times, data[1]);
-    this.sy = makeTimeSeries(times, data[2]);
-    this.x = makeTimeSeries(times, data[8]);
-    this.y = makeTimeSeries(times, data[9]);
-    this.mx = makeTimeSeries(times, data[15]);
-    this.my = makeTimeSeries(times, data[16]);
+    const times = data[3];
+    
+    this.a = makeTimeSeries(times, data[4]);
+    this.sx = makeTimeSeries(times, data[0]);
+    this.sy = makeTimeSeries(times, data[1]);
+    // this.sz = makeTimeSeries(times, data[2]);
   }
   public componentWillUnmount() {
     if (this.interval) {
@@ -57,15 +56,20 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Canvas>
-          <Body x={this.sx[t]} y={this.sy[t]} z={0} r={6.955e8} color={'yellow'} />
-          <Body x={this.x[t]} y={this.y[t]} z={0} r={6.955e6} color={'blue'} focused={true} />
-          <Body x={this.mx[t]} y={this.my[t]} z={0} r={1.7371e6} color={'orange'} />
-          <Trajectory x={this.data[15]} y={this.data[16]} z={this.data[17]} color={'orange'} />
-          <Trajectory x={this.data[8]} y={this.data[9]} z={this.data[10]} color={'blue'} />
+          <Body x={0} y={0} z={0} r={6.955e6} color={'blue'} focused={true} />
+          <Body x={this.sx[t]} y={this.sy[t]} z={0} r={1.7371e6} color={'orange'} />
+          <Orbit r={2e7} color="white" />
+          <Trajectory x={this.data[0]} y={this.data[1]} z={this.data[2]} color={'orange'} />
         </Canvas>
+        <div style={{
+          color: 'white',
+          left: '1.5rem',
+          position: 'absolute',
+          top: '1rem',
+        }}>{this.a[t]}</div>
         <Player
           min={0}
-          max={31536000}
+          max={10000*60}
           time={t}
           playing={this.state.playing}
           onPlay={this.handlePlay}
@@ -76,7 +80,7 @@ export default class App extends React.Component {
     );
   }
   private tick = () => {
-    this.setState({ t: (this.state.t + 1440) % 31536000 });
+    this.setState({ t: (this.state.t + 1) % (10000 * 60) });
   }
   private handlePlay = () => {
     if (this.interval) {
