@@ -1,0 +1,16 @@
+.Deck {
+  width: 100%;
+  height: 100%;
+}
+
+.Deck-Previous,
+.Deck-Current,
+.Deck-Next {
+  width: 100%;
+  height: 100%;
+}
+
+.Deck-Previous,
+.Deck-Next {
+  display: none;
+}

@@ -32,7 +32,7 @@ export default class Canvas extends React.Component<{}, ICanvasState> {
   private rendered: boolean;
   public constructor(props: {}) {
     super(props);
-    this.scene.add(new THREE.AxesHelper(1e16));
+    // this.scene.add(new THREE.AxesHelper(1e16));
     this.cameraFrame.add(this.camera);
     this.camera.position.set(0, 0, 1e8);
     this.scene.add(this.cameraFrame);
@@ -69,6 +69,7 @@ export default class Canvas extends React.Component<{}, ICanvasState> {
         canvas,
         clearAlpha: 0,
         devicePixelRatio: window.devicePixelRatio,
+        logarithmicDepthBuffer: true,
       });
       canvas.addEventListener('gesturestart', this.handleGestureStart);
       canvas.addEventListener('gesturechange', this.handleGestureChange);

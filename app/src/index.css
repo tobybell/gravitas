@@ -1,5 +1,9 @@
+html {
+  font-family: 'SF Pro Text';
+  font-size: 5vh;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Helvetica', sans-serif;
 }
